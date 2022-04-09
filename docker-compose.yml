@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: library-ais
+    image: postgres:14
+    volumes:
+      - ./var/pgdata:/var/lib/postgresql/data
+#      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
