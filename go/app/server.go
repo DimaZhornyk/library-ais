@@ -33,6 +33,10 @@ func NewServer() (*Server, error) {
 }
 
 func (s *Server) Run() error {
+	if err := migrate(s.db); err != nil {
+		return err
+	}
+
 	return s.r.Run(":9000")
 }
 
