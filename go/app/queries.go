@@ -18,7 +18,7 @@ type Query struct {
 }
 
 var queries = []QueryMessage{
-	// BOOKS ###################################################################################################
+	// MARK: BOOKS ###################################################################################################
 	{"Create book", []Query{{
 		"INSERT INTO books (isbn, title, city, publishing_house, year, pages_quantity, price) " +
 			"VALUES (:isbn, :title, :city, :publishing_house, :year, :pages_quantity, :price)",
@@ -43,7 +43,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// BOOK INSTANCES ##################################################################################################
+	// MARK: BOOK INSTANCES #########################################################################################
 	{"Create book instance", []Query{{
 		"INSERT INTO book_instances (inventory_number, book_isbn, shelf) " +
 			"VALUES (:inventory_number, :book_isbn, :shelf)",
@@ -64,7 +64,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// BOOK AUTHORS ##################################################################################################
+	// MARK: BOOK AUTHORS ############################################################################################
 	{"Create book author", []Query{{
 		"INSERT INTO book_authors (book_isbn, surname) " +
 			"VALUES (:book_isbn, :surname)",
@@ -84,7 +84,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// BOOK AREAS ##################################################################################################
+	// MARK: BOOK AREAS #############################################################################################
 	{"Create book area", []Query{{
 		"INSERT INTO book_areas (book_isbn, area_cipher) " +
 			"VALUES (:book_isbn, :area_cipher)",
@@ -105,7 +105,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// CHECKOUTS ##################################################################################################
+	// MARK: CHECKOUTS ##############################################################################################
 	{"Create checkout", []Query{{
 		"INSERT INTO checkouts (checkout_date, expected_return_date) " +
 			"VALUES (:checkout_date, :expected_return_date)",
@@ -135,7 +135,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// KNOWLEDGE AREAS ###############################################################################################
+	// MARK: KNOWLEDGE AREAS ##########################################################################################
 	{"Create knowledge area", []Query{{
 		"INSERT INTO knowledge_areas (cipher, title) " +
 			"VALUES (:cipher, :title)",
@@ -155,7 +155,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// READERS ###################################################################################################
+	// MARK: READERS ##################################################################################################
 	{"Create reader", []Query{{
 		"INSERT INTO readers (card_number, full_name, home_address, seat, birth_date) " +
 			"VALUES (:card_number, :full_name, :home_address, :seat, :birth_date)",
@@ -178,7 +178,7 @@ var queries = []QueryMessage{
 		},
 	}}},
 
-	// READERS_PHONES ################################################################################################
+	// MARK: READERS_PHONES ###########################################################################################
 	{"Create reader phone", []Query{{
 		"INSERT INTO readers_phones (reader_card, phone) " +
 			"VALUES (:reader_card, :phone)",
