@@ -3,7 +3,7 @@
 
 CREATE TABLE checkouts
 (
-    checkout_number      INTEGER NOT NULL CONSTRAINT checkouts_pk PRIMARY KEY,
+    checkout_number      SERIAL CONSTRAINT checkouts_pk PRIMARY KEY,
     checkout_date        DATE    NOT NULL,
     expected_return_date DATE    NOT NULL,
     return_date          DATE,

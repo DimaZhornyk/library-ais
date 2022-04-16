@@ -1,7 +1,7 @@
 -- +goose Up
 -- SQL in this section is executed when the migration is applied.
 
-CREATE TABLE knowledge_area
+CREATE TABLE knowledge_areas
 (
     cipher VARCHAR NOT NULL UNIQUE,
     title  VARCHAR NOT NULL,
@@ -11,4 +11,4 @@ CREATE TABLE knowledge_area
 -- +goose Down
 -- SQL in this section is executed when the migration is rolled back.
 
-DROP TABLE IF EXISTS knowledge_area;
+DROP TABLE IF EXISTS knowledge_areas;
