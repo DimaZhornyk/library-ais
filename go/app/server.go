@@ -1,22 +1,22 @@
 package app
 
 import (
-	"database/sql"
 	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 type Server struct {
-	db *sql.DB
+	db *sqlx.DB
 	r  *gin.Engine
 }
 
 func NewServer() (*Server, error) {
 	psqlString := getPsqlString()
-	db, err := sql.Open("postgres", psqlString)
+	db, err := sqlx.Open("postgres", psqlString)
 	if err != nil {
 		return nil, err
 	}
