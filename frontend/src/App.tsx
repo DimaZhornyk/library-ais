@@ -54,12 +54,7 @@ const ListItem = styled("div")<{ clickable: boolean }>`
 const App: Component = () => {
   const [queries] = createResource(() => DefaultAPI.getQueries());
   const [selected, setSelected] = createSignal<QueryDTO>();
-  const selectedParams = createMemo(() =>
-    selected()?.queries.reduce((acc, q) => ({ ...acc, ...q.params }), {})
-  );
-  createEffect(() => {
-    console.log(selectedParams());
-  });
+
   return (
     <MainContainer>
       <Sidebar>
