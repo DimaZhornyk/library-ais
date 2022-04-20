@@ -11,11 +11,11 @@ type Handler struct {
 }
 
 func (h *Handler) getQueries(c *gin.Context) {
-	c.JSON(200, queries)
+	c.JSON(200, entities)
 }
 
 func (h *Handler) postQuery(c *gin.Context) {
-	var req QueryMessage
+	var req Action
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
