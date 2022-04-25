@@ -51,15 +51,6 @@ var entities = []Entity{
 	// MARK: BOOK INSTANCES #########################################################################################
 	{"Book instances", "SELECT * FROM book_instances",
 		[]Action{
-			{"Create book instance", []Query{{
-				"INSERT INTO book_instances (inventory_number, book_isbn, shelf) " +
-					"VALUES (:inventory_number, :book_isbn, :shelf)",
-				map[string]any{
-					"inventory_number": String,
-					"book_isbn":        String,
-					"shelf":            String,
-				},
-			}}},
 			{"Delete book instance", []Query{{
 				"DELETE FROM book_instances WHERE inventory_number = :inventory_number",
 				map[string]any{
@@ -139,6 +130,12 @@ var entities = []Entity{
 				map[string]any{
 					"checkout_number": Integer,
 				},
+			}}},
+			{"Get checkouts count for each reader", []Query{{
+				"SELECT full_name, COUNT(*) AS cnt" +
+					"FROM (checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number)" +
+					"GROUP BY r.card_number",
+				map[string]any{},
 			}}},
 		},
 	},
