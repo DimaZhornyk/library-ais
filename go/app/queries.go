@@ -102,17 +102,34 @@ var entities = []Entity{
 					"area_cipher": String,
 				},
 			}}},
+			{"Find a knowledge area where all books are from replacement", []Query{{
+				`SELECT cipher as area_cipher, title
+						FROM (
+							 book_areas INNER JOIN knowledge_areas ka ON book_areas.area_cipher = ka.cipher
+						)
+						WHERE NOT EXISTS(
+							SELECT *
+							FROM book_instances
+							WHERE NOT EXISTS (
+								SELECT * FROM replacement_acts
+								WHERE replacement_acts.new_inventory_number = book_instances.inventory_number
+							) AND book_instances.book_isbn = book_areas.book_isbn
+						)`,
+				map[string]any{},
+			}}},
 		},
 	},
 	// MARK: CHECKOUTS ##############################################################################################
 	{"Checkouts", "SELECT * FROM checkouts",
 		[]Action{
 			{"Create checkout", []Query{{
-				"INSERT INTO checkouts (checkout_date, expected_return_date) " +
-					"VALUES (:checkout_date, :expected_return_date)",
+				"INSERT INTO checkouts (reader_card_number, book_inventory_number, checkout_date, expected_return_date)" +
+					"VALUES (:reader_card_number, :book_inventory_number, :checkout_date, :expected_return_date)",
 				map[string]any{
-					"checkout_date":        Date,
-					"expected_return_date": Date,
+					"reader_card_number":    String,
+					"book_inventory_number": String,
+					"checkout_date":         Date,
+					"expected_return_date":  Date,
 				},
 			}}},
 			{"Complete checkout", []Query{{
@@ -174,6 +191,18 @@ var entities = []Entity{
 			}}},
 			{"Delete reader", []Query{{
 				"DELETE FROM readers WHERE card_number = :card_number",
+				map[string]any{
+					"card_number": String,
+				},
+			}}},
+			{"Get all books that some reader ever took", []Query{{
+				`SELECT b.*
+						FROM (
+							checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number
+							INNER JOIN book_instances bi ON checkouts.book_inventory_number = bi.inventory_number
+							INNER JOIN books b ON bi.book_isbn = b.isbn
+						)
+						WHERE r.card_number = :card_number`,
 				map[string]any{
 					"card_number": String,
 				},
