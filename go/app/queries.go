@@ -28,8 +28,8 @@ var entities = []Entity{
 	{"Books", "SELECT * FROM BOOKS",
 		[]Action{
 			{"Create book", []Query{{
-				"INSERT INTO books (isbn, title, city, publishing_house, year, pages_quantity, price) " +
-					"VALUES (:isbn, :title, :city, :publishing_house, :year, :pages_quantity, :price)",
+				`INSERT INTO books (isbn, title, city, publishing_house, year, pages_quantity, price)
+					VALUES (:isbn, :title, :city, :publishing_house, :year, :pages_quantity, :price)`,
 				map[string]any{
 					"isbn":             String,
 					"title":            String,
@@ -69,8 +69,8 @@ var entities = []Entity{
 	{"Book authors", "SELECT * FROM book_authors",
 		[]Action{
 			{"Create book author", []Query{{
-				"INSERT INTO book_authors (book_isbn, surname) " +
-					"VALUES (:book_isbn, :surname)",
+				`INSERT INTO book_authors (book_isbn, surname)
+					VALUES (:book_isbn, :surname)`,
 				map[string]any{
 					"book_isbn": String,
 					"surname":   String,
@@ -88,8 +88,8 @@ var entities = []Entity{
 	{"Book areas", "SELECT * FROM book_areas",
 		[]Action{
 			{"Create book area", []Query{{
-				"INSERT INTO book_areas (book_isbn, area_cipher) " +
-					"VALUES (:book_isbn, :area_cipher)",
+				`INSERT INTO book_areas (book_isbn, area_cipher)
+					VALUES (:book_isbn, :area_cipher)`,
 				map[string]any{
 					"book_isbn":   String,
 					"area_cipher": String,
@@ -108,8 +108,8 @@ var entities = []Entity{
 	{"Checkouts", "SELECT * FROM checkouts",
 		[]Action{
 			{"Create checkout", []Query{{
-				"INSERT INTO checkouts (reader_card_number, book_inventory_number, checkout_date, expected_return_date)" +
-					"VALUES (:reader_card_number, :book_inventory_number, :checkout_date, :expected_return_date)",
+				`INSERT INTO checkouts (reader_card_number, book_inventory_number, checkout_date, expected_return_date)
+					VALUES (:reader_card_number, :book_inventory_number, :checkout_date, :expected_return_date)`,
 				map[string]any{
 					"reader_card_number":    String,
 					"book_inventory_number": String,
@@ -118,9 +118,9 @@ var entities = []Entity{
 				},
 			}}},
 			{"Complete checkout", []Query{{
-				"UPDATE checkouts " +
-					"SET return_date = :return_date, repaid = :repaid " +
-					"WHERE checkout_number = :checkout_number",
+				`UPDATE checkouts
+					SET return_date = :return_date, repaid = :repaid
+					WHERE checkout_number = :checkout_number`,
 				map[string]any{
 					"checkout_number": Integer,
 					"return_date":     Date,
@@ -139,8 +139,8 @@ var entities = []Entity{
 	{"Knowledge areas", "SELECT * FROM knowledge_areas",
 		[]Action{
 			{"Create knowledge area", []Query{{
-				"INSERT INTO knowledge_areas (cipher, title) " +
-					"VALUES (:cipher, :title)",
+				`INSERT INTO knowledge_areas (cipher, title)
+					VALUES (:cipher, :title)`,
 				map[string]any{
 					"cipher": String,
 					"title":  String,
@@ -158,8 +158,8 @@ var entities = []Entity{
 	{"Readers", "SELECT * FROM readers",
 		[]Action{
 			{"Create reader", []Query{{
-				"INSERT INTO readers (card_number, full_name, home_address, seat, birth_date) " +
-					"VALUES (:card_number, :full_name, :home_address, :seat, :birth_date)",
+				`INSERT INTO readers (card_number, full_name, home_address, seat, birth_date)
+					VALUES (:card_number, :full_name, :home_address, :seat, :birth_date)`,
 				map[string]any{
 					"card_number":  String,
 					"full_name":    String,
@@ -192,8 +192,8 @@ var entities = []Entity{
 	{"Readers phones", "SELECT * FROM readers_phones",
 		[]Action{
 			{"Create reader phone", []Query{{
-				"INSERT INTO readers_phones (reader_card, phone) " +
-					"VALUES (:reader_card, :phone)",
+				`INSERT INTO readers_phones (reader_card, phone)
+					VALUES (:reader_card, :phone)`,
 				map[string]any{
 					"reader_card": String,
 					"phone":       String,
@@ -221,8 +221,8 @@ var entities = []Entity{
 	{"Replacement acts", "SELECT * FROM replacement_acts",
 		[]Action{
 			{"Create replacement act", []Query{{
-				"INSERT INTO replacement_acts (replacement_date, old_inventory_number, new_inventory_number) " +
-					"VALUES (:replacement_date, :old_inventory_number, :new_inventory_number)",
+				`INSERT INTO replacement_acts (replacement_date, old_inventory_number, new_inventory_number)
+					VALUES (:replacement_date, :old_inventory_number, :new_inventory_number)`,
 				map[string]any{
 					"replacement_date":     Date,
 					"old_inventory_number": String,
@@ -254,9 +254,9 @@ var entities = []Entity{
 				map[string]any{},
 			}}},
 			{"Get checkouts count for each reader", []Query{{
-				"SELECT full_name, COUNT(*) AS cnt" +
-					"FROM (checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number)" +
-					"GROUP BY r.card_number",
+				`SELECT full_name, COUNT(*) AS cnt
+					FROM (checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number)
+					GROUP BY r.card_number`,
 				map[string]any{},
 			}}},
 			{"Find a knowledge area where all books are from replacement", []Query{{
