@@ -102,21 +102,6 @@ var entities = []Entity{
 					"area_cipher": String,
 				},
 			}}},
-			{"Find a knowledge area where all books are from replacement", []Query{{
-				`SELECT cipher as area_cipher, title
-						FROM (
-							 book_areas INNER JOIN knowledge_areas ka ON book_areas.area_cipher = ka.cipher
-						)
-						WHERE NOT EXISTS(
-							SELECT *
-							FROM book_instances
-							WHERE NOT EXISTS (
-								SELECT * FROM replacement_acts
-								WHERE replacement_acts.new_inventory_number = book_instances.inventory_number
-							) AND book_instances.book_isbn = book_areas.book_isbn
-						)`,
-				map[string]any{},
-			}}},
 		},
 	},
 	// MARK: CHECKOUTS ##############################################################################################
@@ -147,12 +132,6 @@ var entities = []Entity{
 				map[string]any{
 					"checkout_number": Integer,
 				},
-			}}},
-			{"Get checkouts count for each reader", []Query{{
-				"SELECT full_name, COUNT(*) AS cnt" +
-					"FROM (checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number)" +
-					"GROUP BY r.card_number",
-				map[string]any{},
 			}}},
 		},
 	},
@@ -261,6 +240,39 @@ var entities = []Entity{
 				map[string]any{
 					"replacement_act_number": String,
 				},
+			}}},
+		},
+	},
+	{"Common", "",
+		[]Action{
+			{"Get checkouts quantity for books, that were taken more than once", []Query{{
+				`SELECT title, COUNT(*) AS cnt
+						FROM (checkouts INNER JOIN book_instances bi ON bi.inventory_number = checkouts.book_inventory_number
+							INNER JOIN books b ON bi.book_isbn = b.isbn)
+						GROUP BY isbn
+						HAVING COUNT(*) > 1`,
+				map[string]any{},
+			}}},
+			{"Get checkouts count for each reader", []Query{{
+				"SELECT full_name, COUNT(*) AS cnt" +
+					"FROM (checkouts INNER JOIN readers r ON r.card_number = checkouts.reader_card_number)" +
+					"GROUP BY r.card_number",
+				map[string]any{},
+			}}},
+			{"Find a knowledge area where all books are from replacement", []Query{{
+				`SELECT cipher as area_cipher, title
+						FROM (
+							 book_areas INNER JOIN knowledge_areas ka ON book_areas.area_cipher = ka.cipher
+						)
+						WHERE NOT EXISTS(
+							SELECT *
+							FROM book_instances
+							WHERE NOT EXISTS (
+								SELECT * FROM replacement_acts
+								WHERE replacement_acts.new_inventory_number = book_instances.inventory_number
+							) AND book_instances.book_isbn = book_areas.book_isbn
+						)`,
+				map[string]any{},
 			}}},
 		},
 	},
