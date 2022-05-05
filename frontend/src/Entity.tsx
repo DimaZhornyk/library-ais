@@ -9,7 +9,7 @@ import {
   Suspense,
 } from "solid-js";
 import { styled } from "solid-styled-components";
-import { DefaultAPI, QueryDTO } from "./api";
+import { DefaultAPI, EntityDTO, QueryDTO } from "./api";
 import { QueryForm } from "./QueryForm";
 const Table = styled("table")`
   color: white;
@@ -28,10 +28,13 @@ const Th = styled("th")`
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 const Tr = styled("tr")``;
-export const Query: Component<{ query: QueryDTO }> = (props) => {
-  const [executionRes, setExecutionRes] = createSignal<
-    Record<string, unknown>[]
-  >([]);
+export const Entity: Component<{ entity: EntityDTO }> = (props) => {
+  const [executionRes] = createResource(
+    () =>
+      DefaultAPI.executeQuery({ queries: [{ text: props.entity.basicQuery }] }),
+    { initialValue: [] }
+  );
+
   const keys = createMemo(() => Object.keys(executionRes()[0] ?? {}));
   const values = createMemo(() =>
     executionRes().map((entry) => keys().map((key) => entry[key]))
@@ -41,7 +44,7 @@ export const Query: Component<{ query: QueryDTO }> = (props) => {
   });
   return (
     <>
-      <QueryForm query={props.query} onResult={setExecutionRes} />
+      {/*  <QueryForm query={props.query} onResult={setExecutionRes} /> */}
       <Show when={executionRes()}>
         <Table>
           <thead>
