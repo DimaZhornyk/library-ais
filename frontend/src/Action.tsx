@@ -16,7 +16,7 @@ const Td = styled("td")`
 `;
 const Th = styled("th")`
   text-align: center;
-  padding: 16px 0;
+  padding: 16px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 const Tr = styled("tr")``;
@@ -29,7 +29,6 @@ const SubTitle = styled("h4")`
   text-align: center;
 `;
 export const Action: Component<{ action: ActionDTO }> = (props) => {
-  console.log("Action");
   const [queryResult, setQueryResult] = createSignal<
     Record<string, unknown>[] | null
   >(null);

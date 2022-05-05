@@ -1,6 +1,8 @@
 import axios from "axios";
 import {
+  Accessor,
   Component,
+  createEffect,
   createResource,
   createSignal,
   For,
@@ -28,6 +30,7 @@ const Card = styled("div")`
 `;
 const Sidebar = styled(Card)`
   width: 300px;
+  min-width: 300px;
   margin: 20px;
   max-height: calc(100vh - 40px);
   overflow-x: scroll;
@@ -35,6 +38,7 @@ const Sidebar = styled(Card)`
 
 const Main = styled(Card)`
   width: 800px;
+  overflow: auto;
   max-height: calc(100vh - 40px);
   height: calc(100vh - 40px);
   margin: 20px auto;
@@ -69,6 +73,7 @@ const App: Component = () => {
   const [queries] = createResource(() => DefaultAPI.getQueries());
   const [selected, setSelected] = createSignal<EntityDTO>();
   const [selectedAction, setSelectedAction] = createSignal<ActionDTO | null>();
+  createEffect(() => console.log({ effect: selected() }), [selected]);
   return (
     <>
       <Nav>
@@ -111,7 +116,7 @@ const App: Component = () => {
         </Sidebar>
         <Main style={{ padding: "20px" }}>
           <Show when={selected() && selectedAction() == null}>
-            {() => <Entity entity={selected() as EntityDTO} />}
+            <Entity entity={selected as Accessor<EntityDTO>} />
           </Show>
           <Show when={selectedAction()}>
             {(q) => {

@@ -1,4 +1,5 @@
 import {
+  Accessor,
   Component,
   createEffect,
   createMemo,
@@ -24,7 +25,7 @@ const Td = styled("td")`
 `;
 const Th = styled("th")`
   text-align: center;
-  padding: 16px 0;
+  padding: 16px 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 const Tr = styled("tr")``;
@@ -32,12 +33,16 @@ const Title = styled("h3")`
   color: white;
   text-align: center;
 `;
-export const Entity: Component<{ entity: EntityDTO }> = (props) => {
-  const [executionRes] = createResource(
-    () =>
+export const Entity: Component<{ entity: Accessor<EntityDTO> }> = (props) => {
+  createEffect(() => {
+    console.log({ props: props.entity().basicQuery });
+  }, [props.entity]);
+  const [executionRes, { refetch }] = createResource(
+    props.entity,
+    (e) =>
       DefaultAPI.executeQuery({
         queryName: "",
-        queries: [{ text: props.entity.basicQuery, params: {} }],
+        queries: [{ text: e.basicQuery, params: {} }],
       }),
     { initialValue: [] }
   );
