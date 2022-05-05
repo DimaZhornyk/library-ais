@@ -7,7 +7,7 @@ import {
   Show,
 } from "solid-js";
 import { styled } from "solid-styled-components";
-import { DefaultAPI, QueryDTO } from "./api";
+import { DefaultAPI, ActionDTO } from "./api";
 const Container = styled("table")`
   margin: auto;
 `;
@@ -35,7 +35,7 @@ const tryParseNumber = (s: string): string | number => {
   const parsed = parseFloat(s);
   return isNaN(parsed) ? s : parsed;
 };
-const setParams = (query: QueryDTO, params: Record<string, unknown>) => ({
+const setParams = (query: ActionDTO, params: Record<string, unknown>) => ({
   ...query,
   queries: query.queries.map((q) => ({
     ...q,
@@ -46,13 +46,16 @@ const setParams = (query: QueryDTO, params: Record<string, unknown>) => ({
   })),
 });
 export const QueryForm: Component<{
-  query: QueryDTO;
+  query: ActionDTO;
   onResult: (result: Record<string, unknown>[]) => void;
 }> = (props) => {
   const params = createMemo(() =>
     props.query.queries.reduce((acc, q) => ({ ...acc, ...q.params }), {})
   );
-  const onSubmit = async (query: QueryDTO, params: Record<string, unknown>) => {
+  const onSubmit = async (
+    query: ActionDTO,
+    params: Record<string, unknown>
+  ) => {
     console.log({ params });
     await DefaultAPI.executeQuery(setParams(query, params))
       .then((r) => r ?? [])

@@ -1,18 +1,16 @@
 import axios from "axios";
 import {
   Component,
-  createEffect,
-  createMemo,
   createResource,
   createSignal,
   For,
-  lazy,
   Show,
   Suspense,
 } from "solid-js";
 import { styled } from "solid-styled-components";
-import { DefaultAPI, EntityDTO, QueryDTO } from "./api";
+import { DefaultAPI, EntityDTO, ActionDTO } from "./api";
 import { Entity } from "./Entity";
+import { Action } from "./Action";
 
 import logo from "./logo.svg";
 const MainContainer = styled("div")`
@@ -55,24 +53,34 @@ const NestedListItem = styled("div")<{ clickable: boolean }>`
   padding: 10px 8px;
   margin-left: 20px;
 `;
+
 const App: Component = () => {
   const [queries] = createResource(() => DefaultAPI.getQueries());
   const [selected, setSelected] = createSignal<EntityDTO>();
-
+  const [selectedAction, setSelectedAction] = createSignal<ActionDTO | null>();
   return (
     <MainContainer>
       <Sidebar>
         <Suspense>
           <For each={queries()}>
             {(q) => (
-              <ListItem clickable={true} onClick={() => setSelected(q)}>
+              <ListItem
+                clickable={true}
+                onClick={() => {
+                  setSelected(q);
+                  setSelectedAction(null);
+                }}
+              >
                 <p>{q.entityName}</p>
                 <Show when={selected()?.basicQuery === q.basicQuery}>
                   <For each={q.actions}>
                     {(a) => (
                       <NestedListItem
                         clickable={true}
-                        onClick={() => console.log(a)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedAction(a);
+                        }}
                       >
                         <p>{a.queryName}</p>
                       </NestedListItem>
@@ -85,7 +93,15 @@ const App: Component = () => {
         </Suspense>
       </Sidebar>
       <Main style={{ padding: "20px" }}>
-        <Show when={selected()}>{(q) => <Entity entity={q} />}</Show>
+        <Show when={selected() && selectedAction() == null}>
+          {() => <Entity entity={selected() as EntityDTO} />}
+        </Show>
+        <Show when={selectedAction()}>
+          {(q) => {
+            console.log({ q });
+            return <Action action={q} />;
+          }}
+        </Show>
       </Main>
     </MainContainer>
   );

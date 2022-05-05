@@ -3,10 +3,10 @@ import axios from "axios";
 export type EntityDTO = {
   entityName: string;
   basicQuery: string;
-  actions: QueryDTO[];
+  actions: ActionDTO[];
 };
 
-export type QueryDTO = {
+export type ActionDTO = {
   queryName: string;
   queries: {
     text: string;
@@ -20,9 +20,9 @@ export class Api {
   public getQueries(): Promise<EntityDTO[]> {
     return this._axios.get<EntityDTO[]>("/queries").then((r) => r.data);
   }
-  public executeQuery(query: {}): Promise<Record<string, unknown>[]> {
+  public executeQuery(action: ActionDTO): Promise<Record<string, unknown>[]> {
     return this._axios
-      .post<Record<string, unknown>[]>("/query", query)
+      .post<Record<string, unknown>[]>("/query", action)
       .then((r) => r.data ?? []);
   }
 }

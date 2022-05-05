@@ -1,16 +1,8 @@
-import {
-  Component,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-  For,
-  Show,
-  Suspense,
-} from "solid-js";
+import { Component, createMemo, createSignal, For, Show } from "solid-js";
 import { styled } from "solid-styled-components";
-import { DefaultAPI, EntityDTO, ActionDTO } from "./api";
+import { ActionDTO } from "./api";
 import { QueryForm } from "./QueryForm";
+
 const Table = styled("table")`
   color: white;
   width: 100%;
@@ -32,27 +24,31 @@ const Title = styled("h3")`
   color: white;
   text-align: center;
 `;
-export const Entity: Component<{ entity: EntityDTO }> = (props) => {
-  const [executionRes] = createResource(
-    () =>
-      DefaultAPI.executeQuery({
-        queryName: "",
-        queries: [{ text: props.entity.basicQuery, params: {} }],
-      }),
-    { initialValue: [] }
-  );
-
-  const keys = createMemo(() => Object.keys(executionRes()[0] ?? {}));
-  const values = createMemo(() =>
-    executionRes().map((entry) => keys().map((key) => entry[key]))
-  );
-  createEffect(() => {
-    console.log(executionRes());
+const SubTitle = styled("h4")`
+  color: white;
+  text-align: center;
+`;
+export const Action: Component<{ action: ActionDTO }> = (props) => {
+  console.log("Action");
+  const [queryResult, setQueryResult] = createSignal<
+    Record<string, unknown>[] | null
+  >(null);
+  const keys = createMemo(() => {
+    const res = queryResult() ?? [];
+    return Object.keys(res[0] ?? {});
+  });
+  const values = createMemo<unknown[][]>(() => {
+    const res = queryResult() ?? [];
+    return res.map((entry) => keys().map((key) => entry[key]));
   });
   return (
     <>
-      {/*  <QueryForm query={props.query} onResult={setExecutionRes} /> */}
-      <Show when={executionRes()}>
+      <Title>{props.action.queryName}</Title>
+      <Show when={queryResult() == null}>
+        <QueryForm query={props.action} onResult={(r) => setQueryResult(r)} />
+      </Show>
+      <Show when={queryResult()}>
+        <SubTitle>Completed!</SubTitle>
         <Table>
           <thead>
             <For each={keys()}>{(key) => <Th>{key}</Th>}</For>
@@ -67,9 +63,6 @@ export const Entity: Component<{ entity: EntityDTO }> = (props) => {
             </For>
           </tbody>
         </Table>
-      </Show>
-      <Show when={executionRes().length === 0}>
-        <Title>No Records</Title>
       </Show>
     </>
   );
