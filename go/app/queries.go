@@ -25,7 +25,7 @@ type Entity struct {
 
 var entities = []Entity{
 	// MARK: BOOKS ###################################################################################################
-	{"Books", "SELECT * FROM BOOKS",
+	{"Books", "SELECT * FROM books",
 		[]Action{
 			{"Create book", []Query{{
 				`INSERT INTO books (isbn, title, city, publishing_house, year, pages_quantity, price)

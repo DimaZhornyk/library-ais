@@ -8,7 +8,6 @@ import {
 } from "solid-js";
 import { styled } from "solid-styled-components";
 import { DefaultAPI, QueryDTO } from "./api";
-import { Query } from "./Query";
 const Container = styled("table")`
   margin: auto;
 `;

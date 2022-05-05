@@ -11,10 +11,10 @@ import {
   Suspense,
 } from "solid-js";
 import { styled } from "solid-styled-components";
-import { DefaultAPI, QueryDTO } from "./api";
+import { DefaultAPI, EntityDTO, QueryDTO } from "./api";
+import { Entity } from "./Entity";
 
 import logo from "./logo.svg";
-import { Query } from "./Query";
 const MainContainer = styled("div")`
   height: 100vh;
   width: 100%;
@@ -50,10 +50,14 @@ const ListItem = styled("div")<{ clickable: boolean }>`
   border-bottom-color: rgba(255, 255, 255, 0.1) !important;
   padding: 16px 8px;
 `;
-
+const NestedListItem = styled("div")<{ clickable: boolean }>`
+  cursor: ${(props) => (props.clickable ? "pointer" : "default")};
+  padding: 10px 8px;
+  margin-left: 20px;
+`;
 const App: Component = () => {
   const [queries] = createResource(() => DefaultAPI.getQueries());
-  const [selected, setSelected] = createSignal<QueryDTO>();
+  const [selected, setSelected] = createSignal<EntityDTO>();
 
   return (
     <MainContainer>
@@ -62,14 +66,26 @@ const App: Component = () => {
           <For each={queries()}>
             {(q) => (
               <ListItem clickable={true} onClick={() => setSelected(q)}>
-                <p>{q.queryName}</p>
+                <p>{q.entityName}</p>
+                <Show when={selected()?.basicQuery === q.basicQuery}>
+                  <For each={q.actions}>
+                    {(a) => (
+                      <NestedListItem
+                        clickable={true}
+                        onClick={() => console.log(a)}
+                      >
+                        <p>{a.queryName}</p>
+                      </NestedListItem>
+                    )}
+                  </For>
+                </Show>
               </ListItem>
             )}
           </For>
         </Suspense>
       </Sidebar>
       <Main style={{ padding: "20px" }}>
-        <Show when={selected()}>{(q) => <Query query={q} />}</Show>
+        <Show when={selected()}>{(q) => <Entity entity={q} />}</Show>
       </Main>
     </MainContainer>
   );
