@@ -4,7 +4,7 @@
 CREATE TABLE book_authors
 (
     id        SERIAL CONSTRAINT book_author_pk PRIMARY KEY,
-    surname   INT     NOT NULL,
+    surname   VARCHAR     NOT NULL,
     book_isbn VARCHAR NOT NULL CONSTRAINT book_isbn_fk REFERENCES books
 );
 

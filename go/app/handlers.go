@@ -11,7 +11,13 @@ type Handler struct {
 }
 
 func (h *Handler) getQueries(c *gin.Context) {
-	c.JSON(200, entities)
+	e, ok := entities[c.Param("role")]
+	if !ok {
+		c.JSON(400, gin.H{})
+		return
+	}
+
+	c.JSON(200, e)
 }
 
 func (h *Handler) postQuery(c *gin.Context) {
