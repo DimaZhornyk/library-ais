@@ -54,56 +54,74 @@ const NestedListItem = styled("div")<{ clickable: boolean }>`
   margin-left: 20px;
 `;
 
+const Link = styled("a")`
+  color: white;
+`;
+
+const Nav = styled("div")`
+  padding: 16px 8px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+`;
+
 const App: Component = () => {
   const [queries] = createResource(() => DefaultAPI.getQueries());
   const [selected, setSelected] = createSignal<EntityDTO>();
   const [selectedAction, setSelectedAction] = createSignal<ActionDTO | null>();
   return (
-    <MainContainer>
-      <Sidebar>
-        <Suspense>
-          <For each={queries()}>
-            {(q) => (
-              <ListItem
-                clickable={true}
-                onClick={() => {
-                  setSelected(q);
-                  setSelectedAction(null);
-                }}
-              >
-                <p>{q.entityName}</p>
-                <Show when={selected()?.basicQuery === q.basicQuery}>
-                  <For each={q.actions}>
-                    {(a) => (
-                      <NestedListItem
-                        clickable={true}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedAction(a);
-                        }}
-                      >
-                        <p>{a.queryName}</p>
-                      </NestedListItem>
-                    )}
-                  </For>
-                </Show>
-              </ListItem>
-            )}
-          </For>
-        </Suspense>
-      </Sidebar>
-      <Main style={{ padding: "20px" }}>
-        <Show when={selected() && selectedAction() == null}>
-          {() => <Entity entity={selected() as EntityDTO} />}
-        </Show>
-        <Show when={selectedAction()}>
-          {(q) => {
-            console.log({ q });
-            return <Action action={q} />;
-          }}
-        </Show>
-      </Main>
-    </MainContainer>
+    <>
+      <Nav>
+        <Link href="/admin">Admin</Link>
+        <Link href="/librarian">Librarian</Link>
+        <Link href="/reader">Reader</Link>
+      </Nav>
+      <MainContainer>
+        <Sidebar>
+          <Suspense>
+            <For each={queries()}>
+              {(q) => (
+                <ListItem
+                  clickable={true}
+                  onClick={() => {
+                    setSelected(q);
+                    setSelectedAction(null);
+                  }}
+                >
+                  <p>{q.entityName}</p>
+                  <Show when={selected()?.basicQuery === q.basicQuery}>
+                    <For each={q.actions}>
+                      {(a) => (
+                        <NestedListItem
+                          clickable={true}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedAction(a);
+                          }}
+                        >
+                          <p>{a.queryName}</p>
+                        </NestedListItem>
+                      )}
+                    </For>
+                  </Show>
+                </ListItem>
+              )}
+            </For>
+          </Suspense>
+        </Sidebar>
+        <Main style={{ padding: "20px" }}>
+          <Show when={selected() && selectedAction() == null}>
+            {() => <Entity entity={selected() as EntityDTO} />}
+          </Show>
+          <Show when={selectedAction()}>
+            {(q) => {
+              console.log({ q });
+              return <Action action={q} />;
+            }}
+          </Show>
+        </Main>
+      </MainContainer>
+    </>
   );
 };
 

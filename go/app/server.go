@@ -59,7 +59,7 @@ func (s *Server) initRouter() *gin.Engine {
 	r.Use(CORSMiddleware())
 	h := Handler{db: s.db}
 
-	r.GET("/queries", h.getQueries)
+	r.GET("/queries/:role", h.getQueries)
 	r.POST("/query", h.postQuery)
 
 	c := r.Group("/complex")

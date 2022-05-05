@@ -18,7 +18,9 @@ export class Api {
     private readonly _axios = axios.create({ baseURL: "http://localhost:9000" })
   ) {}
   public getQueries(): Promise<EntityDTO[]> {
-    return this._axios.get<EntityDTO[]>("/queries").then((r) => r.data);
+    return this._axios
+      .get<EntityDTO[]>(`/queries/${location.pathname.replace("/", "")}`)
+      .then((r) => r.data);
   }
   public executeQuery(action: ActionDTO): Promise<Record<string, unknown>[]> {
     return this._axios
