@@ -62,9 +62,6 @@ func (s *Server) initRouter() *gin.Engine {
 	r.GET("/queries/:role", h.getQueries)
 	r.POST("/query", h.postQuery)
 
-	c := r.Group("/complex")
-	c.POST("/createBookInstance", h.createBookInstance)
-
 	return r
 }
 
