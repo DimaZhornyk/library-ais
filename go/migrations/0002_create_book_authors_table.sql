@@ -5,7 +5,7 @@ CREATE TABLE book_authors
 (
     id        SERIAL CONSTRAINT book_author_pk PRIMARY KEY,
     surname   VARCHAR     NOT NULL,
-    book_isbn VARCHAR NOT NULL CONSTRAINT book_isbn_fk REFERENCES books
+    book_isbn VARCHAR NOT NULL CONSTRAINT book_isbn_fk REFERENCES books ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX book_author_id_uindex ON book_authors (id);
