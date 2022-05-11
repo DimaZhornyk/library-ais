@@ -85,7 +85,7 @@ export const QueryForm: Component<{
             {([name, type]) => (
               <tr>
                 <Td>
-                  <span>{name.replace("_", " ")}</span>
+                  <span>{name.split("_").join(" ")}</span>
                 </Td>
                 <td>
                   <Input
