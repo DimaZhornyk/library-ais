@@ -33,6 +33,9 @@ const Button = styled("button")`
 `;
 const tryParseNumber = (s: string): string | number => {
   const parsed = parseFloat(s);
+  if (s.match("/^d+$/") == null) {
+    return s;
+  }
   return isNaN(parsed) ? s : parsed;
 };
 const setParams = (query: ActionDTO, params: Record<string, unknown>) => ({
