@@ -155,9 +155,6 @@ var entities = map[string][]Entity{
 		{"Checkouts", "SELECT * FROM checkouts",
 			[]Action{
 				{"Create checkout", []Query{{
-					"SELECT f_raise('Reader has already taken that book')",
-					map[string]any{},
-				}, {
 					`INSERT INTO checkouts (reader_card_number, book_inventory_number, checkout_date, expected_return_date)
 					VALUES (:reader_card_number, :book_inventory_number, :checkout_date, :expected_return_date)`,
 					map[string]any{
