@@ -245,7 +245,7 @@ var entities = map[string][]Entity{
 					},
 				}}},
 				{"Delete reader", []Query{{
-					"DELETE FROM readers WHERE card_number = :card_number",
+					"SELECT * FROM delete_reader(:card_number)",
 					map[string]any{
 						"card_number": String,
 					},
